@@ -1,2 +1,0 @@
-# brndnsvr.github.io
-CINNAMON!!!
