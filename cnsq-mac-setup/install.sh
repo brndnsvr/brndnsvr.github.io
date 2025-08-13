@@ -249,6 +249,8 @@ alias gl='git log --oneline --graph'
 
 # Python environment
 alias cnsq-env='source $HOME/.cnsq-venv/bin/activate'
+alias pip='pip3'
+alias python='python3'
 
 # Safety nets
 alias rm='rm -i'

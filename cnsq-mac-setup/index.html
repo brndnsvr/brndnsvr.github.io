@@ -523,29 +523,21 @@ ansible-galaxy collection install arista.eos</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                         </div>
 
-                        <h4>Example Playbook:</h4>
-                        <div class="command-box">
-                            <pre><code>---
-- name: Backup Network Configs
-  hosts: network_devices
-  gather_facts: no
-  tasks:
-    - name: Backup IOS config
-      cisco.ios.ios_config:
-        backup: yes
-        backup_options:
-          filename: "{{ inventory_hostname }}.cfg"</code></pre>
-                        </div>
-
-                        <div class="tip">
-                            <strong>Getting Started:</strong> Create <code>~/.ansible.cfg</code> with:
-                            <div class="command-box">
-                                <pre><code>[defaults]
-host_key_checking = False
-timeout = 30
-[persistent_connection]
-command_timeout = 60</code></pre>
-                            </div>
+                        <h4>Resources & Documentation:</h4>
+                        <div class="info-box">
+                            <h5>CNSQ Git Repositories:</h5>
+                            <ul>
+                                <li><a href="https://git.cyxtera.com/" target="_blank">Cyxtera Git</a> - Primary repository</li>
+                                <li><a href="https://gitlab.evoquedcs.net/explore/snippets" target="_blank">Evoque DCS Snippets</a> - Code snippets and examples</li>
+                                <li><a href="https://gitlab.evoque-corp.com/" target="_blank">Evoque Corp GitLab</a> - Corporate repositories</li>
+                            </ul>
+                            
+                            <h5>Documentation:</h5>
+                            <ul>
+                                <li><a href="https://git-scm.com/doc" target="_blank">Git Documentation</a> - Official Git docs</li>
+                                <li><a href="https://docs.gitlab.com" target="_blank">GitLab Documentation</a> - GitLab platform docs</li>
+                                <li><a href="https://docs.github.com/en" target="_blank">GitHub Documentation</a> - GitHub platform docs</li>
+                            </ul>
                         </div>
                     </div>
 
@@ -556,12 +548,12 @@ command_timeout = 60</code></pre>
                         
                         <h4>Core Libraries:</h4>
                         <div class="command-box">
-                            <pre><code>pip install netmiko    # SSH connections to network devices
-pip install napalm     # Multi-vendor network automation
-pip install paramiko   # SSH2 protocol library
-pip install textfsm    # Parse semi-structured text
-pip install pyyaml     # YAML parser for configs
-pip install jinja2     # Template engine</code></pre>
+                            <pre><code>pip3 install netmiko    # SSH connections to network devices
+pip3 install napalm     # Multi-vendor network automation
+pip3 install paramiko   # SSH2 protocol library
+pip3 install textfsm    # Parse semi-structured text
+pip3 install pyyaml     # YAML parser for configs
+pip3 install jinja2     # Template engine</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                         </div>
 
