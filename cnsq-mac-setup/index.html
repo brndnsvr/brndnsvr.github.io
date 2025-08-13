@@ -74,7 +74,7 @@
                         <h3>Homebrew Package Manager</h3>
                         <p>The missing package manager for macOS. We'll use this to install everything else.</p>
                         <div class="command-box">
-                            <pre><code>/bin/bash -c "$(curl -fsSL https://brndnsvr.github.io/cnsq-mac-setup/install.sh)"</code></pre>
+                            <pre><code>/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                         </div>
                         <div class="info-box">
@@ -117,7 +117,9 @@ source ~/.zshrc</code></pre>
                         <div class="info-box">
                             <h5>1. General Settings (⌘,)</h5>
                             <ul>
+                                <li><strong>Appearance → Theme:</strong> Minimal (cleaner look)</li>
                                 <li><strong>Profiles → Terminal:</strong> Unlimited scrollback</li>
+                                <li><strong>Profiles → Keys → Key Mappings:</strong> Presets → Natural Text Editing</li>
                             </ul>
                         </div>
 
@@ -168,7 +170,7 @@ source ~/.zshrc</code></pre>
                     <h3>🚀 One-Line Install</h3>
                     <p>Copy and paste this command to install all NetOps tools and configurations:</p>
                     <div class="command-box">
-                        <pre><code>curl -fsSL https://raw.githubusercontent.com/brndnsvr/mac-setup-tool/main/install.sh | bash</code></pre>
+                        <pre><code>curl -fsSL https://brndnsvr.github.io/cnsq-mac-setup/install.sh | bash</code></pre>
                         <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                     </div>
 
@@ -207,7 +209,7 @@ source ~/.zshrc</code></pre>
                     <div class="tip">
                         <strong>Alternative:</strong> Download and review the script first:
                         <div class="command-box">
-                            <pre><code>curl -O https://raw.githubusercontent.com/brndnsvr/mac-setup-tool/main/install.sh
+                            <pre><code>curl -O https://brndnsvr.github.io/cnsq-mac-setup/install.sh
 cat install.sh  # Review the script
 bash install.sh # Run it</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
@@ -476,7 +478,7 @@ done</code></pre>
                     <div class="tool-card">
                         <div class="tool-icon">🧮</div>
                         <h3>sipcalc</h3>
-                        <p class="tool-description">Advanced IP subnet calculator with IPv4/IPv6 support.</p>
+                        <p class="tool-description">Nice IP subnet calculator with IPv4/IPv6 support.</p>
                         <div class="command-box">
                             <pre><code>brew install sipcalc</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
