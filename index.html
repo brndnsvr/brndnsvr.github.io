@@ -1,2 +1,373 @@
-This is a test. 
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Professional portfolio and personal website showcasing skills, experience, and projects">
+    <meta name="keywords" content="portfolio, professional, developer, designer, skills, projects">
+    <meta name="author" content="Your Name">
+    <title>Your Name - Professional Portfolio</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem 0;
+            text-align: center;
+        }
+        
+        nav {
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            padding: 1rem 0;
+        }
+        
+        nav ul li {
+            margin: 0 1.5rem;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        nav ul li a:hover {
+            color: #667eea;
+        }
+        
+        /* Main Content Styles */
+        main {
+            padding: 2rem 0;
+        }
+        
+        section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+        
+        h3 {
+            color: #555;
+            margin-bottom: 0.8rem;
+        }
+        
+        .intro {
+            font-size: 1.1rem;
+            text-align: center;
+            color: #666;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .skill-item {
+            padding: 1.5rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #667eea;
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1.5rem;
+        }
+        
+        .project-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            background: #f8f9fa;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .contact-form {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 0.8rem 2rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: opacity 0.3s ease;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+        }
+        
+        /* Footer Styles */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        .social-links {
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #667eea;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            nav ul li {
+                margin: 0.5rem 0;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .container {
+                padding: 0 15px;
+            }
+            
+            section {
+                padding: 1.5rem;
+            }
+            
+            .skills-grid,
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            section {
+                padding: 1rem;
+            }
+            
+            nav ul li {
+                margin: 0.3rem 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Your Name</h1>
+            <p class="intro">Professional Title | Location</p>
+        </div>
+    </header>
+    
+    <nav>
+        <div class="container">
+            <ul>
+                <li><a href="#about">About</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main class="container">
+        <section id="about">
+            <h2>About Me</h2>
+            <p>Welcome to my professional portfolio. I am a passionate [Your Profession] with [X years] of experience in [Your Field]. I specialize in [Your Specializations] and am committed to delivering high-quality solutions that make a meaningful impact.</p>
+            <p>My journey in [Your Industry] has equipped me with a diverse skill set and a deep understanding of [Relevant Technologies/Methodologies]. I thrive on challenges and continuously seek opportunities to learn and grow in this ever-evolving field.</p>
+        </section>
+        
+        <section id="skills">
+            <h2>Skills & Expertise</h2>
+            <div class="skills-grid">
+                <div class="skill-item">
+                    <h3>Technical Skills</h3>
+                    <p>Programming Languages, Frameworks, Tools and Technologies you're proficient in</p>
+                </div>
+                <div class="skill-item">
+                    <h3>Design & UX</h3>
+                    <p>User Interface Design, User Experience, Prototyping, and Design Tools</p>
+                </div>
+                <div class="skill-item">
+                    <h3>Project Management</h3>
+                    <p>Agile Methodologies, Team Leadership, Strategic Planning, and Communication</p>
+                </div>
+                <div class="skill-item">
+                    <h3>Analytics & Data</h3>
+                    <p>Data Analysis, Performance Optimization, Testing, and Quality Assurance</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="experience">
+            <h2>Professional Experience</h2>
+            <article>
+                <h3>Current Position - Company Name (Year - Present)</h3>
+                <p>Brief description of your current role, key responsibilities, and notable achievements. Highlight specific projects or initiatives you've led and their impact on the organization.</p>
+            </article>
+            <article style="margin-top: 2rem;">
+                <h3>Previous Position - Company Name (Year - Year)</h3>
+                <p>Description of your previous role, focusing on growth, learning experiences, and contributions. Include quantifiable results where possible to demonstrate your impact.</p>
+            </article>
+        </section>
+        
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <div class="projects-grid">
+                <article class="project-card">
+                    <h3>Project Title 1</h3>
+                    <p>Comprehensive description of the project, including the problem it solved, technologies used, and your specific contributions. Highlight the impact and results achieved.</p>
+                    <p><strong>Technologies:</strong> List of technologies used</p>
+                </article>
+                <article class="project-card">
+                    <h3>Project Title 2</h3>
+                    <p>Detailed overview of another significant project, emphasizing innovation, challenges overcome, and successful outcomes. Include metrics or feedback when available.</p>
+                    <p><strong>Technologies:</strong> List of technologies used</p>
+                </article>
+                <article class="project-card">
+                    <h3>Project Title 3</h3>
+                    <p>Description of a third project that showcases different skills or approaches, demonstrating versatility and adaptability in various contexts.</p>
+                    <p><strong>Technologies:</strong> List of technologies used</p>
+                </article>
+            </div>
+        </section>
+        
+        <section id="contact">
+            <h2>Get In Touch</h2>
+            <p style="text-align: center; margin-bottom: 2rem;">I'm always interested in new opportunities and collaborations. Feel free to reach out!</p>
+            <form class="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" required></textarea>
+                </div>
+                <div style="text-align: center;">
+                    <button type="submit" class="btn">Send Message</button>
+                </div>
+            </form>
+        </section>
+    </main>
+    
+    <footer>
+        <div class="container">
+            <p>&copy; 2024 Your Name. All rights reserved.</p>
+            <div class="social-links">
+                <a href="mailto:your.email@example.com">Email</a>
+                <a href="https://linkedin.com/in/yourprofile">LinkedIn</a>
+                <a href="https://github.com/yourusername">GitHub</a>
+                <a href="https://twitter.com/yourusername">Twitter</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
