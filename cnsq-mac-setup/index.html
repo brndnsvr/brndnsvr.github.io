@@ -160,7 +160,7 @@ brew install --cask font-hack-nerd-font</code></pre>
                     <h3>🚀 One-Line Install</h3>
                     <p>Copy and paste this command to install all NetOps tools and configurations:</p>
                     <div class="command-box">
-                        <pre><code>curl -fsSL https://brndnsvr.github.io/cnsq-mac-setup/install.sh | bash</code></pre>
+                        <pre><code>curl -fsSL https://brndnsvr.github.io/mac-setup-tool/install.sh -o install.sh && chmod +x install.sh && ./install.sh</code></pre>
                         <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                     </div>
 
@@ -199,7 +199,7 @@ brew install --cask font-hack-nerd-font</code></pre>
                     <div class="tip">
                         <strong>Alternative:</strong> Download and review the script first:
                         <div class="command-box">
-                            <pre><code>curl -O https://brndnsvr.github.io/cnsq-mac-setup/install.sh
+                            <pre><code>curl -O https://brndnsvr.github.io/mac-setup-tool/install.sh
 cat install.sh  # Review the script
 bash install.sh # Run it</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
@@ -648,7 +648,7 @@ extract() {
                     <h3>Quick Install</h3>
                     <p>Clone the repository and run the setup script:</p>
                     <div class="command-box">
-                        <pre><code>git clone git@github.com:brndnsvr/mac-setup-tool.git
+                        <pre><code>git clone https://github.com/brndnsvr/mac-setup-tool.git
 cd mac-setup-tool
 chmod +x setup.sh
 ./setup.sh</code></pre>
