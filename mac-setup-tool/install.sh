@@ -105,12 +105,12 @@ install_brew_package "wireshark" "Wireshark (CLI tools)"
 install_brew_package "arp-scan" "arp-scan"
 install_brew_package "fping" "fping (parallel ping)"
 
-# Ansible - Install via pip in venv instead of brew for better compatibility
+# Ansible - Install via pip instead of brew for better compatibility
 echo -e "\n${BLUE}Installing Ansible...${NC}"
 if command -v ansible &>/dev/null 2>&1; then
     echo -e "${GREEN}✓${NC} Ansible already installed"
 else
-    echo -e "Ansible will be installed via pip in virtual environment"
+    echo -e "Ansible will be installed via pip3"
 fi
 
 # Security Tools
@@ -188,17 +188,8 @@ install_brew_package "mosh" "mosh (mobile shell)"
 install_brew_package "sshuttle" "sshuttle (VPN over SSH)"
 install_brew_package "pssh" "pssh (parallel SSH)"
 
-# Create virtual environment
-if [[ ! -d "$HOME/.cnsq-venv" ]]; then
-    echo "Creating Python virtual environment..."
-    python3 -m venv "$HOME/.cnsq-venv"
-else
-    echo -e "${GREEN}✓${NC} Virtual environment already exists"
-fi
-
-# Install packages in virtual environment
-echo "Installing Python packages in virtual environment..."
-"$HOME/.cnsq-venv/bin/python" -m pip install --upgrade pip --quiet
+# Install Python packages globally
+echo -e "\n${BLUE}Installing Python packages...${NC}"
 
 PYTHON_PACKAGES=(
     "ansible"
@@ -215,13 +206,13 @@ PYTHON_PACKAGES=(
 
 for package in "${PYTHON_PACKAGES[@]}"; do
     echo -e "  Installing $package..."
-    "$HOME/.cnsq-venv/bin/pip" install "$package" --quiet 2>/dev/null || echo -e "${YELLOW}  Warning: Issues installing $package${NC}"
+    pip3 install "$package" --quiet 2>/dev/null || echo -e "${YELLOW}  Warning: Issues installing $package${NC}"
 done
 
-echo -e "${GREEN}✓${NC} Python environment configured"
+echo -e "${GREEN}✓${NC} Python packages installed"
 
 # Ansible Collections
-if "$HOME/.cnsq-venv/bin/ansible-galaxy" --version &>/dev/null 2>&1; then
+if command -v ansible-galaxy &>/dev/null 2>&1; then
     echo -e "\n${BLUE}Installing Ansible Collections...${NC}"
     
     # Create ansible directory
@@ -240,10 +231,10 @@ if "$HOME/.cnsq-venv/bin/ansible-galaxy" --version &>/dev/null 2>&1; then
     
     for collection in "${ANSIBLE_COLLECTIONS[@]}"; do
         echo -e "  Installing $collection..."
-        "$HOME/.cnsq-venv/bin/ansible-galaxy" collection install "$collection" --force 2>/dev/null || echo -e "${YELLOW}  Warning: Issues with $collection${NC}"
+        ansible-galaxy collection install "$collection" --force 2>/dev/null || echo -e "${YELLOW}  Warning: Issues with $collection${NC}"
     done
 else
-    echo -e "${YELLOW}Ansible not found in venv, skipping collections${NC}"
+    echo -e "${YELLOW}Ansible not found, skipping collections${NC}"
 fi
 
 # Shell Configuration
@@ -279,8 +270,6 @@ alias gl='git log --oneline --graph'
 # Python
 alias python='python3'
 alias pip='pip3'
-alias cnsq-env='source $HOME/.cnsq-venv/bin/activate'
-alias cnsq-ansible='source $HOME/.cnsq-venv/bin/activate && ansible'
 
 # Safety nets
 alias rm='rm -i'
@@ -439,13 +428,13 @@ command -v node &>/dev/null && echo -e "  ${GREEN}✓${NC} Node.js" || echo -e "
 command -v nmap &>/dev/null && echo -e "  ${GREEN}✓${NC} nmap" || echo -e "  ${RED}✗${NC} nmap"
 command -v dig &>/dev/null && echo -e "  ${GREEN}✓${NC} dig (DNS tools)" || echo -e "  ${RED}✗${NC} dig"
 command -v eza &>/dev/null && echo -e "  ${GREEN}✓${NC} eza" || echo -e "  ${RED}✗${NC} eza"
-[[ -d "$HOME/.cnsq-venv" ]] && echo -e "  ${GREEN}✓${NC} Python venv" || echo -e "  ${RED}✗${NC} Python venv"
-"$HOME/.cnsq-venv/bin/ansible" --version &>/dev/null 2>&1 && echo -e "  ${GREEN}✓${NC} Ansible (in venv)" || echo -e "  ${RED}✗${NC} Ansible"
+command -v ansible &>/dev/null && echo -e "  ${GREEN}✓${NC} Ansible" || echo -e "  ${RED}✗${NC} Ansible"
+pip3 show netmiko &>/dev/null 2>&1 && echo -e "  ${GREEN}✓${NC} Python network libraries" || echo -e "  ${RED}✗${NC} Python network libraries"
 
 echo -e "\n${YELLOW}Next Steps:${NC}"
 echo -e "1. Restart terminal or run: ${BLUE}source ~/.zshrc${NC}"
-echo -e "2. Activate Python environment: ${BLUE}cnsq-env${NC}"
-echo -e "3. Test Ansible: ${BLUE}cnsq-env && ansible --version${NC}"
+echo -e "2. Test Ansible: ${BLUE}ansible --version${NC}"
+echo -e "3. Test Python libraries: ${BLUE}python3 -c 'import netmiko; print("netmiko installed")'${NC}"
 echo -e "4. For network tools: ${BLUE}nmap --version${NC}"
 echo ""
 echo -e "${GREEN}Your NetOps environment is ready!${NC}"
