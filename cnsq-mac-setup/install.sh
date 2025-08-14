@@ -32,132 +32,112 @@ echo -e "${GREEN}✓${NC} Homebrew detected\n"
 echo -e "${YELLOW}Updating Homebrew...${NC}"
 brew update
 
+# Function to install a brew package
+install_brew_package() {
+    local package="$1"
+    local package_name="${2:-$package}"  # Display name, defaults to package name
+    
+    if brew list "$package" &>/dev/null 2>&1; then
+        echo -e "${GREEN}✓${NC} $package_name already installed"
+    else
+        echo -e "Installing $package_name..."
+        if brew install "$package" 2>/dev/null; then
+            echo -e "${GREEN}✓${NC} $package_name installed successfully"
+        else
+            echo -e "${YELLOW}⚠${NC} Failed to install $package_name"
+            return 1
+        fi
+    fi
+    return 0
+}
+
 # Core Development Tools
 echo -e "\n${BLUE}Installing Core Development Tools...${NC}"
-CORE_TOOLS=(
-    "git"
-    "neovim"
-    "tmux"
-    "python@3"
-    "node"
-    "jq"
-    "ripgrep"
-    "tree"
-    "wget"
-    "curl"
-)
+install_brew_package "git"
+install_brew_package "neovim"
+install_brew_package "tmux"
+install_brew_package "python@3" "Python 3"
+install_brew_package "node" "Node.js"
+install_brew_package "jq"
+install_brew_package "ripgrep"
+install_brew_package "tree"
+install_brew_package "wget"
+install_brew_package "curl"
 
-for tool in "${CORE_TOOLS[@]}"; do
-    if brew list "$tool" &>/dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} $tool already installed"
-    else
-        echo -e "Installing $tool..."
-        brew install "$tool" || echo -e "${YELLOW}Warning: Failed to install $tool${NC}"
-    fi
-done
-
-# Networking Tools
+# Networking Tools - Some have special names
 echo -e "\n${BLUE}Installing Networking Tools...${NC}"
-NETWORK_TOOLS=(
-    "nmap"
-    "mtr"
-    "telnet"
-    "netcat"
-    "bind"  # for dig/nslookup
-    "sipcalc"
-    "openssh"
-)
+install_brew_package "nmap"
 
-for tool in "${NETWORK_TOOLS[@]}"; do
-    if brew list "$tool" &>/dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} $tool already installed"
-    else
-        echo -e "Installing $tool..."
-        brew install "$tool" || echo -e "${YELLOW}Warning: Failed to install $tool${NC}"
+# mtr needs special handling on macOS
+if ! command -v mtr &>/dev/null 2>&1; then
+    echo -e "Installing mtr (requires sudo)..."
+    brew install mtr
+    # mtr needs special permissions on macOS
+    if [[ -f "/opt/homebrew/sbin/mtr" ]]; then
+        echo -e "${YELLOW}Note: mtr installed at /opt/homebrew/sbin/mtr${NC}"
+        echo -e "${YELLOW}You may need to run: sudo chown root /opt/homebrew/sbin/mtr${NC}"
+        echo -e "${YELLOW}And: sudo chmod u+s /opt/homebrew/sbin/mtr${NC}"
     fi
-done
-
-# Automation Tools - Ansible needs special handling
-echo -e "\n${BLUE}Installing Automation Tools...${NC}"
-
-# Install Ansible (requires Python)
-if brew list ansible &>/dev/null 2>&1; then
-    echo -e "${GREEN}✓${NC} ansible already installed"
 else
-    echo -e "Installing ansible..."
-    brew install ansible || echo -e "${YELLOW}Warning: Failed to install ansible via brew${NC}"
+    echo -e "${GREEN}✓${NC} mtr already installed"
+fi
+
+install_brew_package "telnet"
+install_brew_package "netcat"
+install_brew_package "bind" "bind (dig/nslookup)"
+install_brew_package "ipcalc"  # Note: using ipcalc instead of sipcalc
+install_brew_package "openssh"
+
+# Ansible - Install via pip in venv instead of brew for better compatibility
+echo -e "\n${BLUE}Installing Ansible...${NC}"
+if command -v ansible &>/dev/null 2>&1; then
+    echo -e "${GREEN}✓${NC} Ansible already installed"
+else
+    echo -e "Ansible will be installed via pip in virtual environment"
 fi
 
 # Other automation tools
-AUTOMATION_TOOLS=(
-    "expect"
-    "watch"
-    "fswatch"
-)
+echo -e "\n${BLUE}Installing Other Automation Tools...${NC}"
+install_brew_package "expect"
+install_brew_package "watch"
+install_brew_package "fswatch"
 
-for tool in "${AUTOMATION_TOOLS[@]}"; do
-    if brew list "$tool" &>/dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} $tool already installed"
-    else
-        echo -e "Installing $tool..."
-        brew install "$tool" || echo -e "${YELLOW}Warning: Failed to install $tool${NC}"
-    fi
-done
-
-# Shell Enhancements - Fix eza installation
+# Shell Enhancements
 echo -e "\n${BLUE}Installing Shell Enhancements...${NC}"
 
-# Install eza separately (sometimes needs updating taps)
-if brew list eza &>/dev/null 2>&1; then
-    echo -e "${GREEN}✓${NC} eza already installed"
-else
+# eza might be in a different tap or have issues, try with fallback
+if ! command -v eza &>/dev/null 2>&1; then
     echo -e "Installing eza..."
-    brew install eza || {
-        echo -e "${YELLOW}Trying alternative eza installation...${NC}"
-        brew tap homebrew/core
-        brew install eza
+    brew install eza 2>/dev/null || {
+        echo -e "${YELLOW}Trying to update taps for eza...${NC}"
+        brew tap homebrew/core 2>/dev/null
+        brew install eza 2>/dev/null || {
+            echo -e "${YELLOW}eza installation failed - trying exa as fallback${NC}"
+            brew install exa 2>/dev/null || echo -e "${YELLOW}⚠${NC} Could not install eza or exa"
+        }
     }
-fi
-
-# Other shell tools
-SHELL_TOOLS=(
-    "zsh-syntax-highlighting"
-    "zsh-autosuggestions"
-    "gh"  # GitHub CLI
-    "htop"
-)
-
-for tool in "${SHELL_TOOLS[@]}"; do
-    if brew list "$tool" &>/dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} $tool already installed"
-    else
-        echo -e "Installing $tool..."
-        brew install "$tool" || echo -e "${YELLOW}Warning: Failed to install $tool${NC}"
-    fi
-done
-
-# Special case: sshpass (different tap, may be blocked by macOS)
-echo -e "\n${BLUE}Installing sshpass...${NC}"
-if brew list sshpass &>/dev/null 2>&1; then
-    echo -e "${GREEN}✓${NC} sshpass already installed"
 else
-    echo -e "${YELLOW}Note: sshpass may be blocked by macOS security. Attempting install...${NC}"
-    brew tap hudochenkov/sshpass 2>/dev/null || true
-    brew install hudochenkov/sshpass/sshpass 2>/dev/null || {
-        echo -e "${YELLOW}sshpass installation blocked by macOS. This is normal.${NC}"
-        echo -e "${YELLOW}You can install it manually later if needed.${NC}"
-    }
+    echo -e "${GREEN}✓${NC} eza already installed"
 fi
 
-# Python Setup - Ensure pip is available
+install_brew_package "zsh-syntax-highlighting"
+install_brew_package "zsh-autosuggestions"
+install_brew_package "gh" "GitHub CLI"
+install_brew_package "htop"
+install_brew_package "bat" "bat (better cat)"
+install_brew_package "fd" "fd (better find)"
+
+# Python Setup
 echo -e "\n${BLUE}Setting up Python environment...${NC}"
 
-# First ensure pip is installed
-if ! python3 -m pip --version &>/dev/null 2>&1; then
-    echo -e "${YELLOW}pip not found, installing...${NC}"
-    python3 -m ensurepip 2>/dev/null || {
-        echo -e "${YELLOW}Installing pip via get-pip.py...${NC}"
-        curl -s https://bootstrap.pypa.io/get-pip.py | python3
+# Ensure pip3 is available
+if ! command -v pip3 &>/dev/null 2>&1; then
+    echo -e "${YELLOW}Installing pip3...${NC}"
+    python3 -m ensurepip --upgrade 2>/dev/null || {
+        echo -e "${YELLOW}Downloading get-pip.py...${NC}"
+        curl -s https://bootstrap.pypa.io/get-pip.py -o /tmp/get-pip.py
+        python3 /tmp/get-pip.py --user
+        rm /tmp/get-pip.py
     }
 fi
 
@@ -169,13 +149,13 @@ else
     echo -e "${GREEN}✓${NC} Virtual environment already exists"
 fi
 
-# Upgrade pip in virtual environment
-echo "Upgrading pip in virtual environment..."
-"$HOME/.cnsq-venv/bin/python" -m pip install --quiet --upgrade pip
+# Install packages in virtual environment
+echo "Installing Python packages in virtual environment..."
+"$HOME/.cnsq-venv/bin/python" -m pip install --upgrade pip --quiet
 
-# Install Python packages
-echo "Installing Python packages..."
 PYTHON_PACKAGES=(
+    "ansible"
+    "ansible-core"
     "paramiko"
     "netmiko"
     "napalm"
@@ -184,19 +164,21 @@ PYTHON_PACKAGES=(
     "jinja2"
     "requests"
     "cryptography"
-    "ansible-core"
 )
 
 for package in "${PYTHON_PACKAGES[@]}"; do
     echo -e "  Installing $package..."
-    "$HOME/.cnsq-venv/bin/pip" install --quiet "$package" || echo -e "${YELLOW}  Warning: Failed to install $package${NC}"
+    "$HOME/.cnsq-venv/bin/pip" install "$package" --quiet 2>/dev/null || echo -e "${YELLOW}  Warning: Issues installing $package${NC}"
 done
 
 echo -e "${GREEN}✓${NC} Python environment configured"
 
-# Ansible Collections - Only if ansible is available
-if command -v ansible-galaxy &>/dev/null 2>&1; then
+# Ansible Collections
+if "$HOME/.cnsq-venv/bin/ansible-galaxy" --version &>/dev/null 2>&1; then
     echo -e "\n${BLUE}Installing Ansible Collections...${NC}"
+    
+    # Create ansible directory
+    mkdir -p "$HOME/.ansible/collections"
     
     ANSIBLE_COLLECTIONS=(
         "ansible.netcommon"
@@ -204,16 +186,17 @@ if command -v ansible-galaxy &>/dev/null 2>&1; then
         "ansible.posix"
         "cisco.ios"
         "cisco.iosxr"
+        "cisco.nxos"
         "junipernetworks.junos"
         "arista.eos"
     )
     
     for collection in "${ANSIBLE_COLLECTIONS[@]}"; do
         echo -e "  Installing $collection..."
-        ansible-galaxy collection install "$collection" --force 2>/dev/null || echo -e "${YELLOW}  Warning: Failed to install $collection${NC}"
+        "$HOME/.cnsq-venv/bin/ansible-galaxy" collection install "$collection" --force 2>/dev/null || echo -e "${YELLOW}  Warning: Issues with $collection${NC}"
     done
 else
-    echo -e "${YELLOW}Ansible not found, skipping collections installation${NC}"
+    echo -e "${YELLOW}Ansible not found in venv, skipping collections${NC}"
 fi
 
 # Shell Configuration
@@ -228,15 +211,14 @@ mkdir -p "$HOME/.ansible/roles"
 cat > "$HOME/.zsh/aliases.zsh" << 'EOF'
 # CNSQ NetOps Aliases
 
-# Modern replacements (only if eza is installed)
-if command -v eza &>/dev/null; then
-    alias ll='eza -lh --git --group-directories-first --icons'
-    alias ls='eza --icons'
-    alias tree='eza --tree --icons'
-else
-    alias ll='ls -lah'
-fi
+# Modern replacements (only if tools are installed)
+command -v eza &>/dev/null && alias ls='eza --icons' || alias ls='ls -G'
+command -v eza &>/dev/null && alias ll='eza -lh --git --group-directories-first --icons' || alias ll='ls -lah'
+command -v eza &>/dev/null && alias tree='eza --tree --icons' || alias tree='tree'
+command -v bat &>/dev/null && alias cat='bat'
+command -v fd &>/dev/null && alias find='fd'
 
+# Editor
 alias vi='nvim'
 alias vim='nvim'
 
@@ -247,10 +229,11 @@ alias gc='git commit'
 alias gd='git diff'
 alias gl='git log --oneline --graph'
 
-# Python environment
-alias cnsq-env='source $HOME/.cnsq-venv/bin/activate'
-alias pip='pip3'
+# Python
 alias python='python3'
+alias pip='pip3'
+alias cnsq-env='source $HOME/.cnsq-venv/bin/activate'
+alias cnsq-ansible='source $HOME/.cnsq-venv/bin/activate && ansible'
 
 # Safety nets
 alias rm='rm -i'
@@ -296,6 +279,7 @@ extract() {
         case $1 in
             *.tar.gz)  tar xzf "$1" ;;
             *.tar.bz2) tar xjf "$1" ;;
+            *.tar.xz)  tar xJf "$1" ;;
             *.zip)     unzip "$1" ;;
             *.7z)      7z x "$1" ;;
             *)         echo "Unknown archive type: $1" ;;
@@ -321,19 +305,6 @@ weather() {
     esac
 }
 
-# Initialize SSH agent
-init_ssh_agent() {
-    if [ -z "$SSH_AUTH_SOCK" ]; then
-        eval "$(ssh-agent -s)"
-    fi
-    
-    if [ -f "$SSHKEYPATH" ]; then
-        ssh-add "$SSHKEYPATH"
-    else
-        echo "SSH key not found at $SSHKEYPATH"
-    fi
-}
-
 # Show listening ports
 ports() {
     if [ "$1" = "-a" ]; then
@@ -342,9 +313,20 @@ ports() {
         sudo lsof -i -P -n | grep LISTEN
     fi
 }
+
+# Network device backup
+backup_device() {
+    local device=$1
+    local backup_dir="$HOME/network-backups/$(date +%Y%m%d)"
+    mkdir -p "$backup_dir"
+    
+    echo "Backing up $device..."
+    ssh "${SSHUSER:-admin}@$device" "show running-config" > "$backup_dir/$device.cfg"
+    echo "Backup saved to $backup_dir/$device.cfg"
+}
 EOF
 
-echo -e "${GREEN}✓${NC} Created ~/.zsh/functions.zsh"
+echo -e "${GREEN}✓${NC} Created shell configuration files"
 
 # Create basic Neovim config
 cat > "$HOME/.config/nvim/init.vim" << 'EOF'
@@ -356,6 +338,7 @@ set tabstop=2
 set shiftwidth=2
 set autoindent
 set smartindent
+set clipboard=unnamed
 EOF
 
 # Add to .zshrc if not already there
@@ -367,32 +350,56 @@ if [[ -f "$HOME/.zshrc" ]]; then
 for config in $HOME/.zsh/*.zsh; do
     [[ -f "$config" ]] && source "$config"
 done
+
+# Add Homebrew to PATH (Apple Silicon)
+[[ -d "/opt/homebrew" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Python virtual environment
+export VIRTUAL_ENV_DISABLE_PROMPT=1
 EOF
-        echo -e "${GREEN}✓${NC} Added sourcing to ~/.zshrc"
+        echo -e "${GREEN}✓${NC} Updated ~/.zshrc"
     else
         echo -e "${GREEN}✓${NC} ~/.zshrc already configured"
     fi
 else
-    echo -e "${YELLOW}Note: ~/.zshrc not found. You may need to create it.${NC}"
-fi
+    echo -e "${YELLOW}Creating new ~/.zshrc${NC}"
+    cat > "$HOME/.zshrc" << 'EOF'
+# CNSQ NetOps Setup
+for config in $HOME/.zsh/*.zsh; do
+    [[ -f "$config" ]] && source "$config"
+done
 
-echo -e "${GREEN}✓${NC} Shell configuration complete"
+# Add Homebrew to PATH (Apple Silicon)
+[[ -d "/opt/homebrew" ]] && eval "$(/opt/homebrew/bin/brew shellenv)"
+
+# Python virtual environment
+export VIRTUAL_ENV_DISABLE_PROMPT=1
+EOF
+fi
 
 # Summary
 echo -e "\n${GREEN}═══════════════════════════════════════════════════════════${NC}"
 echo -e "${GREEN}                    Installation Complete!${NC}"
 echo -e "${GREEN}═══════════════════════════════════════════════════════════${NC}\n"
 
-# Check what actually got installed
-echo -e "${BLUE}Verification:${NC}"
-command -v ansible &>/dev/null && echo -e "  ${GREEN}✓${NC} Ansible installed" || echo -e "  ${YELLOW}✗${NC} Ansible not found"
-command -v eza &>/dev/null && echo -e "  ${GREEN}✓${NC} eza installed" || echo -e "  ${YELLOW}✗${NC} eza not found"
-[[ -f "$HOME/.zsh/functions.zsh" ]] && echo -e "  ${GREEN}✓${NC} functions.zsh created" || echo -e "  ${YELLOW}✗${NC} functions.zsh missing"
-[[ -d "$HOME/.cnsq-venv" ]] && echo -e "  ${GREEN}✓${NC} Python venv created" || echo -e "  ${YELLOW}✗${NC} Python venv missing"
+# Verification
+echo -e "${BLUE}Installed Tools:${NC}"
+command -v git &>/dev/null && echo -e "  ${GREEN}✓${NC} Git" || echo -e "  ${RED}✗${NC} Git"
+command -v nvim &>/dev/null && echo -e "  ${GREEN}✓${NC} Neovim" || echo -e "  ${RED}✗${NC} Neovim"
+command -v tmux &>/dev/null && echo -e "  ${GREEN}✓${NC} tmux" || echo -e "  ${RED}✗${NC} tmux"
+command -v python3 &>/dev/null && echo -e "  ${GREEN}✓${NC} Python 3" || echo -e "  ${RED}✗${NC} Python 3"
+command -v node &>/dev/null && echo -e "  ${GREEN}✓${NC} Node.js" || echo -e "  ${RED}✗${NC} Node.js"
+command -v nmap &>/dev/null && echo -e "  ${GREEN}✓${NC} nmap" || echo -e "  ${RED}✗${NC} nmap"
+command -v dig &>/dev/null && echo -e "  ${GREEN}✓${NC} dig (DNS tools)" || echo -e "  ${RED}✗${NC} dig"
+command -v eza &>/dev/null && echo -e "  ${GREEN}✓${NC} eza" || echo -e "  ${RED}✗${NC} eza"
+[[ -d "$HOME/.cnsq-venv" ]] && echo -e "  ${GREEN}✓${NC} Python venv" || echo -e "  ${RED}✗${NC} Python venv"
+"$HOME/.cnsq-venv/bin/ansible" --version &>/dev/null 2>&1 && echo -e "  ${GREEN}✓${NC} Ansible (in venv)" || echo -e "  ${RED}✗${NC} Ansible"
 
 echo -e "\n${YELLOW}Next Steps:${NC}"
-echo -e "1. Restart your terminal or run: ${BLUE}source ~/.zshrc${NC}"
+echo -e "1. Restart terminal or run: ${BLUE}source ~/.zshrc${NC}"
 echo -e "2. Activate Python environment: ${BLUE}cnsq-env${NC}"
-echo -e "3. Test installations: ${BLUE}ansible --version${NC}"
+echo -e "3. Test Ansible: ${BLUE}cnsq-env && ansible --version${NC}"
+echo -e "4. For network tools: ${BLUE}nmap --version${NC}"
 echo ""
 echo -e "${GREEN}Your NetOps environment is ready!${NC}"
+echo -e "${YELLOW}Note: Some tools like mtr may need sudo permissions to run properly.${NC}"
