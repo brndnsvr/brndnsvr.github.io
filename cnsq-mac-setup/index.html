@@ -111,49 +111,39 @@ source ~/.zshrc</code></pre>
                             <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
                         </div>
                         
-                        <h4>Recommended iTerm2 Configuration</h4>
-                        <p>After installation, open iTerm2 and configure these settings:</p>
+                        <h4>iTerm2 Configuration</h4>
+                        <p>After installation, open iTerm2 preferences (⌘,) to customize your terminal:</p>
                         
                         <div class="info-box">
-                            <h5>1. General Settings (⌘,)</h5>
+                            <h5>Key Settings Locations:</h5>
                             <ul>
-                                <li><strong>Appearance → Theme:</strong> Minimal (cleaner look)</li>
-                                <li><strong>Profiles → Terminal:</strong> Unlimited scrollback</li>
-                                <li><strong>Profiles → Keys → Key Mappings:</strong> Presets → Natural Text Editing</li>
+                                <li><strong>Profiles → Colors:</strong> Choose or import color schemes</li>
+                                <li><strong>Profiles → Terminal:</strong> Set scrollback buffer size</li>
+                                <li><strong>Profiles → Text:</strong> Configure fonts and sizes</li>
+                                <li><strong>Appearance → Theme:</strong> Choose window chrome style</li>
                             </ul>
                         </div>
 
                         <div class="info-box">
-                            <h5>2. Color Scheme</h5>
+                            <h5>Useful Keyboard Shortcuts:</h5>
                             <ul>
-                                <li>Go to <strong>Profiles → Colors</strong></li>
-                                <li>Click <strong>Color Presets...</strong> dropdown</li>
-                                <li>Try: <strong>Solarized Dark</strong> or <strong>Dracula</strong></li>
-                            </ul>
-                        </div>
-
-                        <div class="info-box">
-                            <h5>3. Font Settings</h5>
-                            <ul>
-                                <li>Go to <strong>Profiles → Text</strong></li>
-                                <li>Font: <strong>JetBrains Mono</strong> or <strong>SF Mono</strong></li>
-                                <li>Size: <strong>13-14pt</strong> for readability</li>
-                                <li>Enable: <strong>Use ligatures</strong> (if using JetBrains Mono)</li>
-                            </ul>
-                        </div>
-
-                        <div class="info-box">
-                            <h5>4. Window Management</h5>
-                            <ul>
-                                <li><strong>Window → Save Window Arrangement:</strong> Save your layout</li>
-                                <li><strong>General → Startup:</strong> Open saved arrangement</li>
-                                <li><strong>Keys:</strong> ⌘D (split vertical), ⌘⇧D (split horizontal)</li>
+                                <li><strong>⌘D:</strong> Split pane vertically</li>
+                                <li><strong>⌘⇧D:</strong> Split pane horizontally</li>
+                                <li><strong>⌘[/⌘]:</strong> Navigate between panes</li>
+                                <li><strong>⌘T:</strong> New tab</li>
                             </ul>
                         </div>
 
                         <div class="tip">
-                            <strong>💡 Quick Tip:</strong> Install JetBrains Mono font for better code readability:
-                            <code>brew tap homebrew/cask-fonts && brew install --cask font-jetbrains-mono</code>
+                            <strong>Optional:</strong> Install additional fonts for your terminal:
+                            <div class="command-box">
+                                <pre><code># Popular programming fonts
+brew tap homebrew/cask-fonts
+brew install --cask font-jetbrains-mono
+brew install --cask font-fira-code
+brew install --cask font-hack-nerd-font</code></pre>
+                                <button class="copy-btn" onclick="copyCommand(this)">Copy</button>
+                            </div>
                         </div>
                     </div>
                 </div>
