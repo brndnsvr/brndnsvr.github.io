@@ -5,7 +5,7 @@
 # One-liner installation of all required tools
 #############################################################################
 
-set -euo pipefail
+set -uo pipefail
 
 # Colors for output
 GREEN='\033[0;32m'
@@ -41,14 +41,12 @@ install_brew_package() {
         echo -e "${GREEN}✓${NC} $package_name already installed"
     else
         echo -e "Installing $package_name..."
-        if brew install "$package" 2>/dev/null; then
+        if brew install "$package"; then
             echo -e "${GREEN}✓${NC} $package_name installed successfully"
         else
-            echo -e "${YELLOW}⚠${NC} Failed to install $package_name"
-            return 1
+            echo -e "${YELLOW}⚠${NC} Failed to install $package_name - continuing with other packages"
         fi
     fi
-    return 0
 }
 
 # Core Development Tools
@@ -71,12 +69,15 @@ install_brew_package "nmap"
 # mtr needs special handling on macOS
 if ! command -v mtr &>/dev/null 2>&1; then
     echo -e "Installing mtr (requires sudo)..."
-    brew install mtr
-    # mtr needs special permissions on macOS
-    if [[ -f "/opt/homebrew/sbin/mtr" ]]; then
-        echo -e "${YELLOW}Note: mtr installed at /opt/homebrew/sbin/mtr${NC}"
-        echo -e "${YELLOW}You may need to run: sudo chown root /opt/homebrew/sbin/mtr${NC}"
-        echo -e "${YELLOW}And: sudo chmod u+s /opt/homebrew/sbin/mtr${NC}"
+    if brew install mtr 2>/dev/null; then
+        # mtr needs special permissions on macOS
+        if [[ -f "/opt/homebrew/sbin/mtr" ]]; then
+            echo -e "${YELLOW}Note: mtr installed at /opt/homebrew/sbin/mtr${NC}"
+            echo -e "${YELLOW}You may need to run: sudo chown root /opt/homebrew/sbin/mtr${NC}"
+            echo -e "${YELLOW}And: sudo chmod u+s /opt/homebrew/sbin/mtr${NC}"
+        fi
+    else
+        echo -e "${YELLOW}⚠${NC} Failed to install mtr - continuing"
     fi
 else
     echo -e "${GREEN}✓${NC} mtr already installed"
@@ -106,18 +107,21 @@ install_brew_package "fswatch"
 echo -e "\n${BLUE}Installing Shell Enhancements...${NC}"
 
 # eza might be in a different tap or have issues, try with fallback
-if ! command -v eza &>/dev/null 2>&1; then
+if ! command -v eza &>/dev/null 2>&1 && ! command -v exa &>/dev/null 2>&1; then
     echo -e "Installing eza..."
-    brew install eza 2>/dev/null || {
-        echo -e "${YELLOW}Trying to update taps for eza...${NC}"
-        brew tap homebrew/core 2>/dev/null
-        brew install eza 2>/dev/null || {
-            echo -e "${YELLOW}eza installation failed - trying exa as fallback${NC}"
-            brew install exa 2>/dev/null || echo -e "${YELLOW}⚠${NC} Could not install eza or exa"
-        }
-    }
+    if ! brew install eza 2>/dev/null; then
+        echo -e "${YELLOW}eza not available, trying exa as fallback...${NC}"
+        if ! brew install exa 2>/dev/null; then
+            echo -e "${YELLOW}⚠${NC} Could not install eza or exa - continuing"
+        else
+            echo -e "${GREEN}✓${NC} exa installed as alternative to eza"
+        fi
+    else
+        echo -e "${GREEN}✓${NC} eza installed successfully"
+    fi
 else
-    echo -e "${GREEN}✓${NC} eza already installed"
+    command -v eza &>/dev/null && echo -e "${GREEN}✓${NC} eza already installed"
+    command -v exa &>/dev/null && echo -e "${GREEN}✓${NC} exa already installed"
 fi
 
 install_brew_package "zsh-syntax-highlighting"
