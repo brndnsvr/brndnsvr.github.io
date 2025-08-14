@@ -61,10 +61,14 @@ install_brew_package "ripgrep"
 install_brew_package "tree"
 install_brew_package "wget"
 install_brew_package "curl"
+install_brew_package "htop"
+install_brew_package "ncdu" "ncdu (disk usage analyzer)"
 
 # Networking Tools - Some have special names
 echo -e "\n${BLUE}Installing Networking Tools...${NC}"
 install_brew_package "nmap"
+install_brew_package "masscan" "masscan (fast port scanner)"
+install_brew_package "zmap" "zmap (internet scanner)"
 
 # mtr needs special handling on macOS
 if ! command -v mtr &>/dev/null 2>&1; then
@@ -88,6 +92,18 @@ install_brew_package "netcat"
 install_brew_package "bind" "bind (dig/nslookup)"
 install_brew_package "ipcalc"  # Note: using ipcalc instead of sipcalc
 install_brew_package "openssh"
+install_brew_package "iperf3" "iperf3 (bandwidth testing)"
+install_brew_package "speedtest-cli" "speedtest-cli"
+install_brew_package "httpie" "HTTPie (HTTP client)"
+install_brew_package "curl" "curl"
+install_brew_package "wget" "wget"
+install_brew_package "aria2" "aria2 (download accelerator)"
+install_brew_package "rsync" "rsync"
+install_brew_package "ngrep" "ngrep (network grep)"
+install_brew_package "tcpdump" "tcpdump"
+install_brew_package "wireshark" "Wireshark (CLI tools)"
+install_brew_package "arp-scan" "arp-scan"
+install_brew_package "fping" "fping (parallel ping)"
 
 # Ansible - Install via pip in venv instead of brew for better compatibility
 echo -e "\n${BLUE}Installing Ansible...${NC}"
@@ -97,11 +113,27 @@ else
     echo -e "Ansible will be installed via pip in virtual environment"
 fi
 
+# Security Tools
+echo -e "\n${BLUE}Installing Security Tools...${NC}"
+install_brew_package "gnupg" "GnuPG"
+install_brew_package "pass" "pass (password manager)"
+install_brew_package "pwgen" "pwgen (password generator)"
+install_brew_package "oath-toolkit" "oath-toolkit (OTP tools)"
+
 # Other automation tools
 echo -e "\n${BLUE}Installing Other Automation Tools...${NC}"
 install_brew_package "expect"
 install_brew_package "watch"
 install_brew_package "fswatch"
+install_brew_package "pv" "pv (pipe viewer)"
+install_brew_package "parallel" "GNU parallel"
+install_brew_package "screen" "screen"
+install_brew_package "ag" "The Silver Searcher"
+install_brew_package "fzf" "fzf (fuzzy finder)"
+install_brew_package "tldr" "tldr (simplified man pages)"
+install_brew_package "direnv" "direnv (environment manager)"
+install_brew_package "yq" "yq (YAML processor)"
+install_brew_package "glow" "glow (markdown viewer)"
 
 # Shell Enhancements
 echo -e "\n${BLUE}Installing Shell Enhancements...${NC}"
@@ -127,9 +159,13 @@ fi
 install_brew_package "zsh-syntax-highlighting"
 install_brew_package "zsh-autosuggestions"
 install_brew_package "gh" "GitHub CLI"
-install_brew_package "htop"
 install_brew_package "bat" "bat (better cat)"
 install_brew_package "fd" "fd (better find)"
+install_brew_package "duf" "duf (better df)"
+install_brew_package "dust" "dust (better du)"
+install_brew_package "procs" "procs (better ps)"
+install_brew_package "bottom" "bottom (system monitor)"
+install_brew_package "glances" "glances (system monitor)"
 
 # Python Setup
 echo -e "\n${BLUE}Setting up Python environment...${NC}"
@@ -144,6 +180,13 @@ if ! command -v pip3 &>/dev/null 2>&1; then
         rm /tmp/get-pip.py
     }
 fi
+
+# SSH and Remote Tools
+echo -e "\n${BLUE}Installing SSH and Remote Tools...${NC}"
+install_brew_package "autossh" "autossh (persistent SSH)"
+install_brew_package "mosh" "mosh (mobile shell)"
+install_brew_package "sshuttle" "sshuttle (VPN over SSH)"
+install_brew_package "pssh" "pssh (parallel SSH)"
 
 # Create virtual environment
 if [[ ! -d "$HOME/.cnsq-venv" ]]; then
